@@ -8,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 services.AddControllersWithViews();
 services.AddDbContext<AppDbContext>(options => { options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")); });
-services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
+services.AddDefaultIdentity<IdentityUser>()
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 

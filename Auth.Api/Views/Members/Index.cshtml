@@ -1,1 +1,14 @@
-<h1>Welcome to the members area.</h1>
+<h1>Welcome, @ViewBag.Name</h1>
+@{
+    if (ViewBag.IsAuth)
+    {
+        <h2>You are authenticated</h2>
+    }
+}
+
+<ol>
+    @foreach (var item in ViewBag.Claims)
+    {
+        <li>@item</li>
+    }
+</ol>
