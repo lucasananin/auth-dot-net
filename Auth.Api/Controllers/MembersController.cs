@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Authorization;
+using Auth.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.Api.Controllers;
 
-public class MembersController : Controller
+public class MembersController(IAuthService authService) : Controller
 {
-    [Authorize]
+    // [Authorize]
     public async Task<IActionResult> Index()
     {
         var isAuth = HttpContext.User.Identity.IsAuthenticated;
@@ -15,7 +15,7 @@ public class MembersController : Controller
         ViewBag.IsAuth = isAuth;
         ViewBag.Name = name;
         ViewBag.Claims = claims;
-
+        
         return View();
     }
 }

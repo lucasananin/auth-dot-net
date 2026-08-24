@@ -1,4 +1,5 @@
 using Auth.Api.Data;
+using Auth.Api.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,7 @@ services.AddDbContext<AppDbContext>(options => { options.UseSqlite(builder.Confi
 services.AddDefaultIdentity<IdentityUser>()
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>();
+services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -20,6 +22,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
 }
 
 app.UseHttpsRedirection();
