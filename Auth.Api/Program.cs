@@ -27,7 +27,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
-    await RoleSeeder.AssignRoleToUser(scope.ServiceProvider);
+    await RoleSeeder.SeedUserDataAsync(scope.ServiceProvider);
 }
 
 app.UseHttpsRedirection();
