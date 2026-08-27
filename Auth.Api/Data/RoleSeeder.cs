@@ -38,6 +38,7 @@ public static class RoleSeeder
 
             var claims = await userManager.GetClaimsAsync(user);
             var hasClaim = claims.Any(c => c.Type == CLAIM_TYPE && c.Value == CLAIM_VALUE);
+            // await userManager.RemoveClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
 
             if (!hasClaim)
             {

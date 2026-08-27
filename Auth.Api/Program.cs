@@ -10,9 +10,11 @@ var services = builder.Services;
 services.AddControllersWithViews();
 services.AddDbContext<AppDbContext>(options => { options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")); });
 services.AddDefaultIdentity<IdentityUser>()
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>();
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<AppDbContext>();
 services.AddScoped<IAuthService, AuthService>();
+services.AddAuthorizationBuilder()
+        .AddPolicy("CanViewReports", policy => { policy.RequireClaim("Permission", "CanViewReports"); });
 
 var app = builder.Build();
 

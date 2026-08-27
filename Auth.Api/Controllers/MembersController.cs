@@ -16,7 +16,25 @@ public class MembersController(IAuthService authService) : Controller
         ViewBag.IsAuth = isAuth;
         ViewBag.Name = name;
         ViewBag.Claims = claims;
-        
+
         return View();
+    }
+
+    [Authorize(Policy = "CanViewReports")]
+    public IActionResult Reports()
+    {
+        return View();
+    }
+
+    // Essentially means:"You haven't successfully authenticated for this resource."
+    public async Task<IActionResult> ChallengeTest()
+    {
+        return Challenge();
+    }
+
+    // Means: "I know who you are, but you're not allowed to do this."
+    public async Task<IActionResult> ForbidTest()
+    {
+        return Forbid();
     }
 }
