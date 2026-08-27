@@ -1,3 +1,4 @@
+using Auth.Api.Models;
 using Auth.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,19 @@ public class MembersController(IAuthService authService) : Controller
         ViewBag.Name = name;
         ViewBag.Claims = claims;
 
-        return View();
+        var model = new MemberViewModel
+        {
+            CanViewReports = await authService.CanViewReports(),
+        };
+
+        return View(model);
+    }
+
+    public async Task<IActionResult> ToggleReports()
+    {
+        await authService.ToggleReportsAuthorization();
+        return RedirectToAction(nameof(Index));
+        return await Index();
     }
 
     [Authorize(Policy = "CanViewReports")]

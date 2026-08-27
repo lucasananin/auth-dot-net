@@ -1,11 +1,36 @@
+@model Auth.Api.Models.MemberViewModel
+
 <h1>Welcome, @ViewBag.Name</h1>
+
 @{
     if (ViewBag.IsAuth)
     {
         <h2>You are authenticated</h2>
     }
+
+    if (Model.CanViewReports)
+    {
+        // button to remove claims
+    }
+    else
+    {
+        // buttom to add claims.
+    }
+
+    <form asp-controller="Members" asp-action="ToggleReports">
+
+        @* <input type="hidden" name="resource" value="people" /> *@
+        @* <input type="hidden" name="resource" value=@ViewData["Resource"] />
+        <input type="hidden" name="id" value="@Model.Id" /> *@
+
+        <button type="submit">
+            @(Model.CanViewReports ? "★ Remove permission" : "☆ Add Permission")
+        </button>
+
+    </form>
 }
 
+<h2>Claims</h2>
 <ol>
     @foreach (var item in ViewBag.Claims)
     {

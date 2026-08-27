@@ -5,10 +5,10 @@ namespace Auth.Api.Data;
 
 public static class RoleSeeder
 {
-    const string ROLE_ADMIN = "Admin";
-    const string USER_EMAIL = "user@example.com";
-    const string CLAIM_TYPE = "Permission";
-    const string CLAIM_VALUE = "CanViewReports";
+    public const string ROLE_ADMIN = "Admin";
+    public const string USER_EMAIL = "user@example.com";
+    public const string CLAIM_TYPE = "Permission";
+    public const string CLAIM_VALUE = "CanViewReports";
 
     public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
     {
@@ -36,6 +36,7 @@ public static class RoleSeeder
                 await userManager.AddToRoleAsync(user, ROLE_ADMIN);
             }
 
+            return;
             var claims = await userManager.GetClaimsAsync(user);
             var hasClaim = claims.Any(c => c.Type == CLAIM_TYPE && c.Value == CLAIM_VALUE);
             // await userManager.RemoveClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
@@ -44,6 +45,25 @@ public static class RoleSeeder
             {
                 await userManager.AddClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
             }
+
+            var POLICY_TYPE = "Department";
+            var POLICY_VALUE = "Finance";
+            var hasDepartment = claims.Any(d => d.Type == POLICY_TYPE && d.Value == POLICY_VALUE);
+            if (!hasDepartment)
+            {
+                await userManager.AddClaimAsync(user, new Claim(POLICY_VALUE, POLICY_VALUE));
+            }
+        }
+    }
+
+    public static async Task ClearUsers(IServiceProvider serviceProvider)
+    {
+        var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+        var users = userManager.Users.ToList();
+
+        foreach (var user in users)
+        {
+            await userManager.DeleteAsync(user);
         }
     }
 }

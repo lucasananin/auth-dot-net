@@ -1,10 +1,14 @@
+using System.Security.Claims;
+using Auth.Api.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Api.Services;
 
 public class AuthService(
     UserManager<IdentityUser> userManager,
-    RoleManager<IdentityRole> roleManager) : IAuthService
+    RoleManager<IdentityRole> roleManager,
+    SignInManager<IdentityUser> signInManager,
+    IHttpContextAccessor httpContextAccessor) : IAuthService
 {
     public async Task<bool> RoleExistsAsync(string role)
     {
@@ -24,5 +28,47 @@ public class AuthService(
         {
             await userManager.AddToRoleAsync(user, "Admin");
         }
+    }
+
+    public async Task ToggleReportsAuthorization()
+    {
+        // var principal = httpContextAccessor.HttpContext?.User;
+        // if (principal == null) return;
+
+        // var user = await userManager.GetUserAsync(principal);
+        // if (user == null) return;
+
+        // var claims = await userManager.GetClaimsAsync(user);
+        // var hasClaim = claims.Any(c => c.Type == RoleSeeder.CLAIM_TYPE && c.Value == RoleSeeder.CLAIM_VALUE);
+        var user = await GetUser();
+        var hasClaim = await CanViewReports();
+
+        if (!hasClaim)
+        {
+            await userManager.AddClaimAsync(user, new Claim(RoleSeeder.CLAIM_TYPE, RoleSeeder.CLAIM_VALUE));
+        }
+        else
+        {
+            await userManager.RemoveClaimAsync(user, new Claim(RoleSeeder.CLAIM_TYPE, RoleSeeder.CLAIM_VALUE));
+        }
+
+        await signInManager.RefreshSignInAsync(user);
+    }
+
+    public async Task<bool> CanViewReports()
+    {
+        var user = await GetUser();
+        var claims = await userManager.GetClaimsAsync(user);
+        var hasClaim = claims.Any(c => c.Type == RoleSeeder.CLAIM_TYPE && c.Value == RoleSeeder.CLAIM_VALUE);
+        return hasClaim;
+    }
+
+    private async Task<IdentityUser> GetUser()
+    {
+        var principal = httpContextAccessor.HttpContext?.User;
+        if (principal == null) return null;
+
+        var user = await userManager.GetUserAsync(principal);
+        return user;
     }
 }

@@ -14,7 +14,11 @@ services.AddDefaultIdentity<IdentityUser>()
         .AddEntityFrameworkStores<AppDbContext>();
 services.AddScoped<IAuthService, AuthService>();
 services.AddAuthorizationBuilder()
-        .AddPolicy("CanViewReports", policy => { policy.RequireClaim("Permission", "CanViewReports"); });
+        .AddPolicy("CanViewReports", policy =>
+        {
+            policy.RequireClaim("Permission", "CanViewReports");
+            // policy.RequireClaim("Department", "Finance");
+        });
 
 var app = builder.Build();
 
@@ -28,8 +32,10 @@ if (!app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    await RoleSeeder.SeedRolesAsync(scope.ServiceProvider);
-    await RoleSeeder.SeedUserDataAsync(scope.ServiceProvider);
+    var serviceProvicer = scope.ServiceProvider;
+    await RoleSeeder.SeedRolesAsync(serviceProvicer);
+    await RoleSeeder.SeedUserDataAsync(serviceProvicer);
+    // await RoleSeeder.ClearUsers(serviceProvicer);
 }
 
 app.UseHttpsRedirection();
