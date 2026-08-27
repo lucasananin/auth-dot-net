@@ -1,4 +1,4 @@
-using System.Security.Claims;
+// using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 
 namespace Auth.Api.Data;
@@ -35,24 +35,22 @@ public static class RoleSeeder
             {
                 await userManager.AddToRoleAsync(user, ROLE_ADMIN);
             }
+            // var claims = await userManager.GetClaimsAsync(user);
+            // var hasClaim = claims.Any(c => c.Type == CLAIM_TYPE && c.Value == CLAIM_VALUE);
+            // // await userManager.RemoveClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
 
-            return;
-            var claims = await userManager.GetClaimsAsync(user);
-            var hasClaim = claims.Any(c => c.Type == CLAIM_TYPE && c.Value == CLAIM_VALUE);
-            // await userManager.RemoveClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
+            // if (!hasClaim)
+            // {
+            //     await userManager.AddClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
+            // }
 
-            if (!hasClaim)
-            {
-                await userManager.AddClaimAsync(user, new Claim(CLAIM_TYPE, CLAIM_VALUE));
-            }
-
-            var POLICY_TYPE = "Department";
-            var POLICY_VALUE = "Finance";
-            var hasDepartment = claims.Any(d => d.Type == POLICY_TYPE && d.Value == POLICY_VALUE);
-            if (!hasDepartment)
-            {
-                await userManager.AddClaimAsync(user, new Claim(POLICY_VALUE, POLICY_VALUE));
-            }
+            // var POLICY_TYPE = "Department";
+            // var POLICY_VALUE = "Finance";
+            // var hasDepartment = claims.Any(d => d.Type == POLICY_TYPE && d.Value == POLICY_VALUE);
+            // if (!hasDepartment)
+            // {
+            //     await userManager.AddClaimAsync(user, new Claim(POLICY_VALUE, POLICY_VALUE));
+            // }
         }
     }
 

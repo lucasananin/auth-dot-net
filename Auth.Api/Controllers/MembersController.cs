@@ -30,7 +30,6 @@ public class MembersController(IAuthService authService) : Controller
     {
         await authService.ToggleReportsAuthorization();
         return RedirectToAction(nameof(Index));
-        return await Index();
     }
 
     [Authorize(Policy = "CanViewReports")]

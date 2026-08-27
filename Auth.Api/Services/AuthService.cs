@@ -32,14 +32,6 @@ public class AuthService(
 
     public async Task ToggleReportsAuthorization()
     {
-        // var principal = httpContextAccessor.HttpContext?.User;
-        // if (principal == null) return;
-
-        // var user = await userManager.GetUserAsync(principal);
-        // if (user == null) return;
-
-        // var claims = await userManager.GetClaimsAsync(user);
-        // var hasClaim = claims.Any(c => c.Type == RoleSeeder.CLAIM_TYPE && c.Value == RoleSeeder.CLAIM_VALUE);
         var user = await GetUser();
         var hasClaim = await CanViewReports();
 
